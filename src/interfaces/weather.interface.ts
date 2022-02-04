@@ -9,7 +9,7 @@ export interface CurrentWeather {
 export interface HourForecast {
     hour: string,
     temperature: number,
-    weather: string
+    weather: Weather
 }
 
 export interface DailyForecast {

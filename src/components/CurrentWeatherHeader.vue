@@ -3,7 +3,7 @@
     <ion-card>
       <ion-card-header>
         <ion-card-subtitle>{{ weather.city }}</ion-card-subtitle>
-        <ion-card-title>{{ getCurrentTemperatureInDegree }}</ion-card-title>
+        <ion-card-title>{{ temperatureWithoutDecimals }}</ion-card-title>
       </ion-card-header>
       <ion-card-content class="custom-weather-card">
         <img
@@ -24,8 +24,8 @@ export default {
     weather: Object,
   },
   computed: {
-    getCurrentTemperatureInDegree(): string {
-      return (((this.weather.temperature - 32) * 5) / 9).toFixed(0);
+    temperatureWithoutDecimals() {
+      return this.weather.temperature.toFixed(0);
     },
   },
 };
@@ -37,7 +37,7 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  top: 20%;
+  top: 40%;
   transform: translateY(-50%);
 }
 
