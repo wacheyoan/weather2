@@ -1,0 +1,7 @@
+{
+  "name": "ecv-meteo",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
