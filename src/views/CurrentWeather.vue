@@ -44,13 +44,26 @@ export default {
     };
   },
   async mounted() {
-    this.currentWeather = await this.getCurrentWeather() as CurrentWeather;
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        this.currentWeather = (await this.getCurrentWeather(
+          latitude,
+          longitude
+        )) as CurrentWeather;
+      });
+    } else {
+      throw new Error("Geolocation is not available");
+    }
   },
   methods: {
-    async getCurrentWeather(): Promise<CurrentWeather> {
+    async getCurrentWeather(
+      latitude: number,
+      longitude: number
+    ): Promise<CurrentWeather> {
       const coordinates = {
-        latitude: 50.293197,
-        longitude: 2.7424531,
+        latitude,
+        longitude,
       } as Coordinates;
       const currentWeather: CurrentWeather =
         await WeatherService.getCurrentWeather(coordinates);
