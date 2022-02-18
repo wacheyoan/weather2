@@ -27,6 +27,8 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  loadingController,
+  toastController,
 } from "@ionic/vue";
 import CurrentWeatherHeader from "@/components/CurrentWeatherHeader.vue";
 import CurrentWeatherListForecast from "@/components/CurrentWeatherListForecast.vue";
@@ -52,17 +54,8 @@ export default {
   },
   async mounted() {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
-        this.currentWeather = (await this.getCurrentWeather(
-          latitude,
-          longitude
-        )) as CurrentWeather;
-        this.forecastWeather = await this.getWeatherForecast(
-          latitude,
-          longitude
-        );
-      });
+      await this.showGeolocationNotAvailable();
+      await this.getCurrentWeatherByLocation();
     } else {
       throw new Error("Geolocation is not available");
     }
@@ -76,6 +69,33 @@ export default {
       const currentWeather: CurrentWeather =
         await WeatherService.getCurrentWeather(coordinates);
       return currentWeather;
+    },
+    async showGeolocationNotAvailable() {
+      navigator.permissions.query({ name: "geolocation" }).then(async () => {
+        const toast = await toastController.create({
+          message: `La géolocalisation n'est pas disponible sur votre support.`,
+          duration: 2000,
+        });
+        return toast.present();
+      });
+    },
+    async getCurrentWeatherByLocation() {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const loading = await loadingController.create({
+          message: "Synchronisation des données en cours, veuillez patienter",
+        });
+        loading.present();
+        const { latitude, longitude } = position.coords;
+        this.currentWeather = (await this.getCurrentWeather(
+          latitude,
+          longitude
+        )) as CurrentWeather;
+        this.forecastWeather = await this.getWeatherForecast(
+          latitude,
+          longitude
+        );
+        loading.dismiss();
+      });
     },
     async getWeatherForecast(
       latitude: number,
