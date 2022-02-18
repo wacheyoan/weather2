@@ -27,6 +27,7 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  toastController,
 } from "@ionic/vue";
 import { Coordinates } from "@/interfaces/coordinates.interface";
 import CurrentWeather from "@/components/CurrentWeather.vue";
@@ -48,6 +49,7 @@ export default {
   },
   async mounted() {
     if ("geolocation" in navigator) {
+      await this.showGeolocationNotAvailable();
       navigator.geolocation.getCurrentPosition(async (position) => {
         const coordinates = position.coords as Coordinates;
         this.latitude = coordinates.latitude;
@@ -57,6 +59,16 @@ export default {
       throw new Error("Geolocation is not available");
     }
   },
-  methods: {},
+  methods: {
+    async showGeolocationNotAvailable() {
+      navigator.permissions.query({ name: "geolocation" }).then(async () => {
+        const toast = await toastController.create({
+          message: `La géolocalisation n'est pas disponible sur votre support.`,
+          duration: 2000,
+        });
+        return toast.present();
+      });
+    },
+  },
 };
 </script>

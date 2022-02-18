@@ -31,7 +31,6 @@ export default {
   },
   async mounted() {
     if ("geolocation" in navigator) {
-      await this.showGeolocationNotAvailable();
       await this.getCurrentWeatherByLocation();
     } else {
       throw new Error("Geolocation is not available");
@@ -43,18 +42,10 @@ export default {
       longitude: number
     ): Promise<CurrentWeather> {
       const coordinates = { latitude, longitude } as Coordinates;
+      console.log(coordinates);
       const currentWeather: CurrentWeather =
         await WeatherService.getCurrentWeather(coordinates);
       return currentWeather;
-    },
-    async showGeolocationNotAvailable() {
-      navigator.permissions.query({ name: "geolocation" }).then(async () => {
-        const toast = await toastController.create({
-          message: `La géolocalisation n'est pas disponible sur votre support.`,
-          duration: 2000,
-        });
-        return toast.present();
-      });
     },
     async getCurrentWeatherByLocation() {
       const loading = await loadingController.create({

@@ -21,11 +21,11 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'searchWeather',
-        component: () => import('@/views/FavoritesWeathers.vue')
+        component: () => import('@/views/SearchWeather.vue')
       },
       {
         path: 'favoritesWeather',
-        component: () => import('@/views/SearchWeather.vue')
+        component: () => import('@/views/FavoritesWeathers.vue')
       }
     ]
   }
