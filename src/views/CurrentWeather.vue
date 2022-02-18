@@ -12,6 +12,10 @@
         </ion-toolbar>
       </ion-header>
       <current-weather-header v-if="currentWeather" :weather="currentWeather" />
+      <current-weather-list-forecast
+        v-if="forecastWeather"
+        :forecasts="forecastWeather"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -25,6 +29,7 @@ import {
   IonContent,
 } from "@ionic/vue";
 import CurrentWeatherHeader from "@/components/CurrentWeatherHeader.vue";
+import CurrentWeatherListForecast from "@/components/CurrentWeatherListForecast.vue";
 import WeatherService from "@/services/weather.service";
 import { CurrentWeather } from "@/interfaces/weather.interface";
 import { Coordinates } from "@/interfaces/coordinates.interface";
@@ -32,6 +37,7 @@ import { Coordinates } from "@/interfaces/coordinates.interface";
 export default {
   components: {
     CurrentWeatherHeader,
+    CurrentWeatherListForecast,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -41,13 +47,21 @@ export default {
   data() {
     return {
       currentWeather: null,
+      forecastWeather: null,
     };
   },
   async mounted() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
-        this.currentWeather = (await this.getCurrentWeather(latitude,longitude)) as CurrentWeather;
+        this.currentWeather = (await this.getCurrentWeather(
+          latitude,
+          longitude
+        )) as CurrentWeather;
+        this.forecastWeather = await this.getWeatherForecast(
+          latitude,
+          longitude
+        );
       });
     } else {
       throw new Error("Geolocation is not available");
@@ -58,9 +72,20 @@ export default {
       latitude: number,
       longitude: number
     ): Promise<CurrentWeather> {
-      const coordinates = {latitude,longitude} as Coordinates;
-      const currentWeather: CurrentWeather = await WeatherService.getCurrentWeather(coordinates);
+      const coordinates = { latitude, longitude } as Coordinates;
+      const currentWeather: CurrentWeather =
+        await WeatherService.getCurrentWeather(coordinates);
       return currentWeather;
+    },
+    async getWeatherForecast(
+      latitude: number,
+      longitude: number
+    ): Promise<any> {
+      const coordinates = { latitude, longitude } as Coordinates;
+      const weatherForecast = await WeatherService.getWeatherForecast(
+        coordinates
+      );
+      return weatherForecast;
     },
   },
 };

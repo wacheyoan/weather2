@@ -4,17 +4,14 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/tabs/currentWeather">
-          <ion-icon :icon="triangle" />
           <ion-label>Météo locale</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/tabs/searchWeather">
-          <ion-icon :icon="ellipse" />
           <ion-label>Chercher une ville</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/tabs/favoritesWeather">
-          <ion-icon :icon="square" />
           <ion-label>Liste des favoris</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -28,7 +25,6 @@ import {
   IonTabButton,
   IonTabs,
   IonLabel,
-  IonIcon,
   IonPage,
   IonRouterOutlet,
 } from "@ionic/vue";
@@ -40,7 +36,6 @@ export default {
     IonTabs,
     IonTabBar,
     IonTabButton,
-    IonIcon,
     IonPage,
     IonRouterOutlet,
   },
