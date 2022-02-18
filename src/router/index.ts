@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'currentWeather',
-        component: () => import('@/views/CurrentWeather.vue')
+        component: () => import('@/views/CurrentWeatherPage.vue')
       },
       {
         path: 'searchWeather',
