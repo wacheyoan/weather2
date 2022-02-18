@@ -11,7 +11,7 @@ export const cityStore = defineStore('storeId', {
             this.favoritesCity.push(city)
         },
         deleteCity(index: number): void {
-            this.favoritesCity.splice(0, index);
+            this.favoritesCity.splice(index, 1);
         }
     }
 })

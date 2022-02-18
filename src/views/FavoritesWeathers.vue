@@ -11,13 +11,14 @@
           <ion-title size="large">Liste des favoris</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-card
-        v-for="(city, index) in favoritesCity"
-        :key="index"
-        @click="showWeatherLocation(city)"
-      >
+      <ion-card v-for="(city, index) in favoritesCity" :key="index">
         <ion-card-header>
-          <ion-card-title>{{ city }}</ion-card-title>
+          <ion-card-title @click="showWeatherLocation(city)"
+            >{{ city }}
+          </ion-card-title>
+          <ion-card-content>
+            <ion-button @click="getCurrentCity(index)">Supprimer</ion-button>
+          </ion-card-content>
         </ion-card-header>
       </ion-card>
     </ion-content>
@@ -32,7 +33,8 @@ import {
   IonTitle,
   IonContent,
 } from "@ionic/vue";
-import { mapState } from "pinia";
+import { trash } from "ionicons/icons";
+import { mapActions, mapState } from "pinia";
 import { cityStore } from "../store/city.store";
 
 export default {
@@ -40,10 +42,25 @@ export default {
   computed: {
     ...mapState(cityStore, ["favoritesCity"]),
   },
+  data() {
+    return {
+      trash,
+    };
+  },
   methods: {
+    ...mapActions(cityStore, ["deleteCity"]),
     showWeatherLocation(city: string): void {
       window.location.href = `/tabs/searchWeather?city=${city}`;
+    },
+    getCurrentCity(index: number): void {
+      return this.deleteCity(index);
     },
   },
 };
 </script>
+
+<style scoped>
+ion-icon {
+  color: white;
+}
+</style>
