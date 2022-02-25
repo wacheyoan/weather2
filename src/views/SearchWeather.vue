@@ -12,12 +12,14 @@
         </ion-toolbar>
       </ion-header>
       <ion-input v-model="city" clear-input value=""></ion-input>
-      <ion-button @click="searchWeather()" expand="block"
+      <div class="button-container">
+      <ion-button @click="searchWeather" expand="block" :disabled="!this.city"
         >Rechercher</ion-button
       >
-      <ion-button @click="addToFavorites()" expand="block"
+      <ion-button @click="addToFavorites" expand="block" :disabled="!this.city"
         >Ajouter en favoris</ion-button
       >
+      </div>
       <current-weather
         v-if="coordinates"
         :latitude="coordinates.latitude"
@@ -55,7 +57,7 @@ export default {
   data() {
     return {
       city: "",
-      coordinates: null,
+      coordinates: null
     };
   },
   async mounted() {
@@ -78,15 +80,45 @@ export default {
       this.coordinates = coordinates as Coordinates;
     },
     addToFavorites(): void {
-      return this.addNewCity(this.city);
+      if(this.city && false === this.checkIfCityAlreadyInFavorites()){
+        return this.addNewCity(this.city);
+      }
     },
     checkIfCityAlreadyInFavorites(): boolean {
+
       const isExistCity: Array<string> = this.favoritesCity.filter(
-        (city: string) => city === this.city
-      ).length;
-      console.log(isExistCity);
-      return isExistCity.length > 0 ? true : false;
+        (city: string) => city.toLowerCase() === this.city.toLowerCase()
+      );
+
+
+      return isExistCity.length > 0;
     },
   },
 };
 </script>
+
+<style scoped>
+  .button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 16px 0 16px;
+  }
+
+  .button-container > * {
+    width: 100%
+  }
+
+  ion-input{
+    border: 1px solid black;
+    width: 90%;
+    border-radius: 8px;
+    margin: 0 16px 0 18px;
+    padding-left: 8px !important;
+  }
+
+  ion-input > button{
+    position: absolute;
+    right: 8px;
+  }
+</style>
